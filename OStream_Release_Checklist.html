@@ -1,0 +1,327 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>OStream Launch Checklist</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f6f5f2; --surface:#ffffff; --surface-2:#f0eee9; --border:#e3e0d8;
+  --text:#1c1b19; --muted:#6b6862; --faint:#9a968e;
+  --accent:#2f5bd3; --accent-soft:#e7edfc;
+  --crit:#b42318; --crit-soft:#fdeceb;
+  --high:#c4520c; --high-soft:#fdf0e6;
+  --med:#a37a00; --med-soft:#fbf5df;
+  --low:#3d6b8f; --low-soft:#e9f1f7;
+  --ok:#1f7a4d; --ok-soft:#e5f4ec;
+  --shadow:0 1px 2px rgba(20,18,14,.04),0 4px 16px rgba(20,18,14,.04);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#141413; --surface:#1c1b1a; --surface-2:#242321; --border:#2f2d2a;
+    --text:#ecebe7; --muted:#a29f98; --faint:#76736c;
+    --accent:#7d9cf0; --accent-soft:#1f2740;
+    --crit:#f47067; --crit-soft:#3a1a18;
+    --high:#f0a060; --high-soft:#38251a;
+    --med:#e0c050; --med-soft:#332c14;
+    --low:#82b4d8; --low-soft:#1a2833;
+    --ok:#5cc58e; --ok-soft:#16301f;
+    --shadow:none;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#141413; --surface:#1c1b1a; --surface-2:#242321; --border:#2f2d2a;
+  --text:#ecebe7; --muted:#a29f98; --faint:#76736c;
+  --accent:#7d9cf0; --accent-soft:#1f2740;
+  --crit:#f47067; --crit-soft:#3a1a18;
+  --high:#f0a060; --high-soft:#38251a;
+  --med:#e0c050; --med-soft:#332c14;
+  --low:#82b4d8; --low-soft:#1a2833;
+  --ok:#5cc58e; --ok-soft:#16301f;
+  --shadow:none;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--text);font:15px/1.55 Inter,system-ui,-apple-system,"Segoe UI",sans-serif;-webkit-font-smoothing:antialiased}
+.wrap{max-width:880px;margin:0 auto;padding:48px 16px 96px}
+code,.mono{font-family:"JetBrains Mono",ui-monospace,Consolas,monospace;font-size:.86em}
+code{background:var(--surface-2);padding:1px 6px;border-radius:5px}
+
+/* header */
+.eyebrow{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:600}
+h1{font-size:clamp(28px,5vw,38px);line-height:1.15;margin:8px 0 12px;letter-spacing:-.02em;font-weight:700}
+.lede{color:var(--muted);max-width:640px;margin:0}
+.toolbar{display:flex;gap:8px;margin-top:20px;flex-wrap:wrap}
+button.ghost{font:inherit;font-size:13px;font-weight:500;color:var(--muted);background:transparent;border:1px solid var(--border);border-radius:8px;padding:6px 12px;cursor:pointer}
+button.ghost:hover{color:var(--text);border-color:var(--faint)}
+
+/* status card */
+.status{margin:32px 0 16px;background:var(--surface);border:1px solid var(--border);border-radius:14px;box-shadow:var(--shadow);overflow:hidden}
+.status-top{display:flex;align-items:center;gap:14px;padding:18px 22px;border-bottom:1px solid var(--border);flex-wrap:wrap}
+.verdict{display:inline-flex;align-items:center;gap:8px;font-weight:600;color:var(--crit);background:var(--crit-soft);padding:5px 12px 5px 10px;border-radius:999px;font-size:13px}
+.verdict .dot{width:8px;height:8px;border-radius:50%;background:currentColor}
+.status-top .asof{color:var(--muted);font-size:13px}
+.stats{display:grid;grid-template-columns:repeat(4,1fr)}
+.stat{padding:18px 22px;border-right:1px solid var(--border)}
+.stat:last-child{border-right:0}
+.stat .n{font-size:28px;font-weight:700;letter-spacing:-.02em;line-height:1;font-variant-numeric:tabular-nums}
+.stat .l{font-size:12.5px;color:var(--muted);margin-top:6px}
+.n.crit{color:var(--crit)} .n.high{color:var(--high)}
+@media (max-width:620px){.stats{grid-template-columns:repeat(2,1fr)}.stat:nth-child(2){border-right:0}.stat:nth-child(-n+2){border-bottom:1px solid var(--border)}}
+
+.definition{background:var(--accent-soft);border-radius:12px;padding:16px 20px;margin:0 0 40px;font-size:14.5px}
+.definition strong{color:var(--accent)}
+
+/* progress */
+.progress{position:sticky;top:0;z-index:5;background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);padding:12px 0;margin-bottom:8px;border-bottom:1px solid var(--border)}
+.progress-row{display:flex;justify-content:space-between;align-items:baseline;font-size:13px;color:var(--muted);margin-bottom:8px}
+.progress-row b{color:var(--text);font-variant-numeric:tabular-nums}
+.bar{height:6px;background:var(--surface-2);border-radius:99px;overflow:hidden}
+.bar i{display:block;height:100%;width:0;background:var(--ok);border-radius:99px;transition:width .35s cubic-bezier(.2,.8,.2,1)}
+.gate-nav{display:flex;gap:6px;margin-top:10px;overflow-x:auto;scrollbar-width:none}
+.gate-nav::-webkit-scrollbar{display:none}
+.gate-nav a{flex:0 0 auto;font-size:12px;font-weight:500;text-decoration:none;color:var(--muted);border:1px solid var(--border);border-radius:999px;padding:3px 10px;background:var(--surface);white-space:nowrap}
+.gate-nav a.done{color:var(--ok);border-color:color-mix(in srgb,var(--ok) 40%,transparent);background:var(--ok-soft)}
+
+/* gates */
+.gate{margin-top:40px;scroll-margin-top:110px}
+.gate-head{display:flex;align-items:flex-start;gap:14px;margin-bottom:14px}
+.gate-num{flex:0 0 auto;width:34px;height:34px;border-radius:10px;display:grid;place-items:center;font-weight:700;font-size:14px;background:var(--surface);border:1px solid var(--border);color:var(--muted);transition:all .2s}
+.gate.complete .gate-num{background:var(--ok);border-color:var(--ok);color:#fff}
+.gate h2{font-size:19px;margin:0;letter-spacing:-.01em;line-height:1.3}
+.gate .sub{color:var(--muted);font-size:13.5px;margin-top:2px}
+.gate-count{margin-left:auto;font-size:12.5px;color:var(--muted);font-variant-numeric:tabular-nums;white-space:nowrap;padding-top:4px}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);overflow:hidden}
+.group-label{font-size:11.5px;letter-spacing:.07em;text-transform:uppercase;font-weight:600;color:var(--faint);padding:14px 18px 4px}
+.card .group-label:not(:first-child){border-top:1px solid var(--border);margin-top:4px}
+
+label.item{display:flex;gap:12px;align-items:flex-start;padding:11px 18px;cursor:pointer;transition:background .12s}
+label.item:hover{background:var(--surface-2)}
+label.item input{appearance:none;-webkit-appearance:none;flex:0 0 auto;width:18px;height:18px;margin:2px 0 0;border:1.5px solid var(--faint);border-radius:5px;display:grid;place-items:center;cursor:pointer;transition:all .15s;background:var(--surface)}
+label.item input::after{content:"";width:9px;height:5px;border:2px solid #fff;border-top:0;border-right:0;transform:rotate(-45deg) scale(0);margin-top:-2px;transition:transform .15s cubic-bezier(.2,.8,.2,1.2)}
+label.item input:checked{background:var(--ok);border-color:var(--ok)}
+label.item input:checked::after{transform:rotate(-45deg) scale(1)}
+label.item input:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.item-body{flex:1;min-width:0}
+.item-text{transition:color .15s}
+label.item input:checked + .item-body .item-text{color:var(--faint);text-decoration:line-through;text-decoration-color:color-mix(in srgb,var(--faint) 60%,transparent)}
+.tags{display:inline-flex;gap:5px;flex-wrap:wrap;vertical-align:1px;margin-right:6px}
+.tag{font-family:"JetBrains Mono",ui-monospace,Consolas,monospace;font-size:11px;font-weight:500;padding:1px 7px;border-radius:5px;background:var(--surface-2);color:var(--muted);white-space:nowrap}
+.tag.crit{background:var(--crit-soft);color:var(--crit)}
+.tag.high{background:var(--high-soft);color:var(--high)}
+.tag.med{background:var(--med-soft);color:var(--med)}
+.tag.low{background:var(--low-soft);color:var(--low)}
+
+/* lower sections */
+.two{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:48px}
+@media (max-width:720px){.two{grid-template-columns:1fr}}
+.panel{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:20px 22px;box-shadow:var(--shadow)}
+.panel h3{margin:0 0 10px;font-size:15px}
+.panel p,.panel li{color:var(--muted);font-size:14px}
+.panel p{margin:0}
+.panel ul{margin:0;padding-left:18px}
+.panel li{margin:6px 0}
+footer{margin-top:48px;color:var(--faint);font-size:12.5px;border-top:1px solid var(--border);padding-top:16px}
+
+@media print{
+  body{background:#fff}
+  .progress,.toolbar{display:none}
+  .card,.panel,.status{box-shadow:none}
+  .gate{break-inside:avoid-page}
+  label.item{break-inside:avoid}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="eyebrow">OStream v3.0 · Release readiness</div>
+    <h1>Launch checklist</h1>
+    <p class="lede">Six gates from today's state to a launch we can stand behind. Work top to bottom. A gate is done when every box in it is ticked.</p>
+    <div class="toolbar">
+      <button class="ghost" id="print">Print / save as PDF</button>
+      <button class="ghost" id="reset">Clear ticks</button>
+    </div>
+  </header>
+
+  <section class="status" aria-label="Current status">
+    <div class="status-top">
+      <span class="verdict"><span class="dot"></span>Not ready to launch</span>
+      <span class="asof">As of 2 Nov 2026 · from <code>OStream_Test_Plan_ V0.2 (1).xlsx</code> and the 27 Oct backend audit</span>
+    </div>
+    <div class="stats">
+      <div class="stat"><div class="n crit">1</div><div class="l">Critical open</div></div>
+      <div class="stat"><div class="n high">19</div><div class="l">High open or in progress</div></div>
+      <div class="stat"><div class="n">81</div><div class="l">Bugs logged</div></div>
+      <div class="stat"><div class="n">0 / 5</div><div class="l">Test runs passed</div></div>
+    </div>
+  </section>
+
+  <div class="definition">
+    <strong>Good enough to launch means:</strong> no Critical or High bugs open; the core loop (sign up → create event → go live → capture → share) works end to end on a real device; real payments work; and production stays up under expected load. Medium and Low bugs ship with a tracked backlog.
+  </div>
+
+  <div class="progress">
+    <div class="progress-row"><span>Overall progress</span><span><b id="done">0</b> of <b id="total">0</b> done</span></div>
+    <div class="bar"><i id="fill"></i></div>
+    <nav class="gate-nav" id="gate-nav"></nav>
+  </div>
+
+  <main id="gates"></main>
+
+  <div class="two">
+    <div class="panel">
+      <h3>Ships on the backlog</h3>
+      <p>36 open Medium and 23 open Low bugs, OST-010/011/012/014/015, and the open Change Requests. Read them once so nothing is really a High in disguise, then schedule them for the first update after launch.</p>
+    </div>
+    <div class="panel">
+      <h3>Answer before sign-off</h3>
+      <ul>
+        <li>Expected users and peak concurrency at launch?</li>
+        <li>Android only, or Android and iOS together?</li>
+        <li>Which plans and which payment mode are live on day one?</li>
+        <li>Which numbers on the Plan Limits sheet are correct?</li>
+        <li>Who owns each gate, and what is the target date?</li>
+      </ul>
+    </div>
+  </div>
+
+  <footer>Ticks are saved in this browser only. Bug IDs refer to the Bug Reports sheet; OST IDs refer to <code>tests/report/</code>.</footer>
+</div>
+
+<script>
+const GATES = [
+  { title: "Security blockers", sub: "Nothing else matters until these are closed.", groups: [{ items: [
+    [["BUG-55","crit"],["OST-001"], "Admin API requires authentication. Verify no admin route answers without a valid admin token."],
+    [[], "Revoke any activation codes or custom plans that could have been created while the admin API was open."],
+    [[], "Review exposure of the account-deletion queue and subscriber list; decide whether affected users need notice."],
+    [["BUG-56","high"],["OST-002"], "CORS allows only our real origins; no reflected Origin with credentials."],
+    [["OST-013","med"], "Public subscriber list no longer returns names and emails without auth."],
+    [["OST-006","med"], "<code>payment-info/{ref}</code> requires auth and no longer creates a transaction on GET."],
+    [["OST-004","med"], "Rate limiting on login, OTP, check-email/phone and registration."],
+    [["BUG-46","high"], "Paid checkout never unlocks a plan without a real charge."],
+    [[], "Re-run the security tests in <code>tests/</code> against the fixed build and attach evidence."]
+  ]}]},
+  { title: "Backend stability", sub: "Production has to stay up while people use it.", groups: [{ items: [
+    [["BUG-81","high"], "Production no longer drops to 502/503 during a light sequential run."],
+    [["BUG-57","high"],["OST-003"], "Agree a launch load target and show it passes with headroom. The current knee is ~50 req/s, with 100% errors by 75–100 req/s."],
+    [["OST-005","med"], "503 and other error responses return JSON, not HTML."],
+    [["OST-007","med"], "Fix the doubled base path (<code>/api/api/v2</code>); the app and docs use the same URL."],
+    [[], "Monitoring and alerts on uptime, error rate and latency; someone on call for launch week."],
+    [[], "Database backup taken and a restore actually tested."],
+    [["OST-008","low"],["OST-009","low"], "Production config reviewed: no localhost origins in CSP, cookie flags set."]
+  ]}]},
+  { title: "Core app flows", sub: "Every High bug in the main user journey.", groups: [
+    { label: "Events and going live", items: [
+      [["BUG-01","high"], "Create event works when the start time is the current minute."],
+      [["BUG-20","high"], "Start times in the past are rejected."],
+      [["BUG-19","high"], "No duplicate event after returning from the plans screen."],
+      [["BUG-41","high"],["BUG-42","high"], "Event goes live at its start time, Start event works, and participants get Join event."],
+      [["BUG-79","high"], "Events show in the app."],
+      [["BUG-02","high"], "Updating an event with an empty description works."]
+    ]},
+    { label: "Plans and payments", items: [
+      [["BUG-21","high"], "Free plan activates."],
+      [["BUG-22","high"], "Paid checkout returns to the app with a clear result; no debug popup or Coming Soon page."],
+      [["BUG-46","high"], "Real charge in live mode: pay, plan unlocks, transaction recorded."],
+      [[], "Failed, cancelled and refunded payment paths tested."],
+      [[], "Apple and Google in-app purchase rules checked if plans are sold inside the app."]
+    ]},
+    { label: "Capture and media", items: [
+      [["BUG-45","high"], "Recordings save without “Error trying to save that video”."],
+      [["BUG-53","high"], "Start and end location coordinates are attached to recorded media."]
+    ]},
+    { label: "Account and notifications", items: [
+      [["BUG-18","high"], "Tapping a push notification no longer crashes the app."],
+      [["BUG-03","high"], "Change-password flow has no Back-button loop."],
+      [[], "Register, login, forgot password and delete account work end to end with real OTP emails."]
+    ]}
+  ]},
+  { title: "Website and store readiness", sub: "What people see before they install.", groups: [{ items: [
+    [["BUG-70","high"], "Website pricing matches what the app actually sells."],
+    [["BUG-71","high"], "Play Store and App Store links on the website."],
+    [[], "Store listing ready: name, description, screenshots, icon, category, content rating, contact email."],
+    [[], "Privacy policy and terms published and linked from the app, site and store listing."],
+    [[], "Data-safety / privacy-label answers match what the app collects (location, media, email, phone)."],
+    [[], "Signed production build with the prod API URL and prod payment keys. The current APK points at dev."],
+    [[], "Version and build numbers set; changelog written."]
+  ]}]},
+  { title: "Final verification", sub: "Prove the fixes hold together.", groups: [{ items: [
+    [[], "Re-test every Critical and High fix; fill in Fix Validation on the Bug Reports sheet."],
+    [[], "Regression of High-priority test cases on at least two real Android devices (one low-end), plus iOS if it ships."],
+    [[], "Raise API functional coverage beyond 23 of 83 operations: run <code>tests/tierC_functional/</code> with a test JWT and a second account."],
+    [[], "Cross-user access check: user A cannot read or change user B's events or media."],
+    [[], "Smoke test on production after deploy."],
+    [[], "A final run recorded as PASS on the Summary sheet."]
+  ]}]},
+  { title: "Launch day", sub: "Release carefully and watch closely.", groups: [{ items: [
+    [[], "Go / no-go call with sign-off from QA, dev and product."],
+    [[], "Rollback plan written: previous backend version and how to pull the app release."],
+    [[], "Staged rollout (5–10% first) if the store allows it."],
+    [[], "Support inbox and a bug-report channel are live."],
+    [[], "Watch crashes, error rate and payments for the first 48 hours."],
+    [[], "Triage anything new within a day; hotfix process agreed."]
+  ]}]}
+];
+
+const KEY = "ostream-launch-checklist-v1";
+let state = {};
+try { state = JSON.parse(localStorage.getItem(KEY)) || {}; } catch (e) {}
+const save = () => { try { localStorage.setItem(KEY, JSON.stringify(state)); } catch (e) {} };
+
+const main = document.getElementById("gates");
+const nav = document.getElementById("gate-nav");
+
+GATES.forEach((g, gi) => {
+  const sec = document.createElement("section");
+  sec.className = "gate"; sec.id = "gate-" + (gi + 1);
+  sec.innerHTML = `<div class="gate-head"><div class="gate-num">${gi + 1}</div><div><h2>${g.title}</h2><div class="sub">${g.sub}</div></div><div class="gate-count"></div></div>`;
+  const card = document.createElement("div"); card.className = "card";
+  g.groups.forEach((grp, ri) => {
+    if (grp.label) card.insertAdjacentHTML("beforeend", `<div class="group-label">${grp.label}</div>`);
+    grp.items.forEach((it, ii) => {
+      const text = it[it.length - 1];
+      const tags = it.slice(0, -1).filter(t => t.length).map(([id, sev]) => `<span class="tag ${sev || ""}">${id}</span>`).join("");
+      const id = `g${gi}-${ri}-${ii}`;
+      const lab = document.createElement("label"); lab.className = "item";
+      lab.innerHTML = `<input type="checkbox" data-id="${id}"${state[id] ? " checked" : ""}><div class="item-body">${tags ? `<span class="tags">${tags}</span>` : ""}<span class="item-text">${text}</span></div>`;
+      card.appendChild(lab);
+    });
+  });
+  sec.appendChild(card); main.appendChild(sec);
+  nav.insertAdjacentHTML("beforeend", `<a href="#gate-${gi + 1}">${gi + 1}. ${g.title}</a>`);
+});
+
+function update() {
+  const all = [...document.querySelectorAll("input[data-id]")];
+  const done = all.filter(i => i.checked).length;
+  document.getElementById("done").textContent = done;
+  document.getElementById("total").textContent = all.length;
+  document.getElementById("fill").style.width = (all.length ? done / all.length * 100 : 0) + "%";
+  document.querySelectorAll(".gate").forEach((sec, i) => {
+    const boxes = [...sec.querySelectorAll("input")];
+    const d = boxes.filter(b => b.checked).length;
+    sec.querySelector(".gate-count").textContent = `${d} / ${boxes.length}`;
+    const complete = d === boxes.length;
+    sec.classList.toggle("complete", complete);
+    nav.children[i].classList.toggle("done", complete);
+  });
+}
+main.addEventListener("change", e => {
+  if (!e.target.dataset.id) return;
+  state[e.target.dataset.id] = e.target.checked; save(); update();
+});
+document.getElementById("reset").onclick = () => {
+  if (!confirm("Clear all ticks?")) return;
+  state = {}; save();
+  document.querySelectorAll("input[data-id]").forEach(i => i.checked = false); update();
+};
+document.getElementById("print").onclick = () => window.print();
+update();
+</script>
+</body>
+</html>
